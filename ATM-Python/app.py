@@ -78,8 +78,12 @@ def main_menu():
                                 "\nInvalid choice. Try again, KSH or USD: ")
 
                         print("---------------------------------------")
+                        
                         verify_withdraw = input(
                             "Is this the correct amount, Y or N ? " + currency + " " + str(amt) + ": ")
+                        while verify_withdraw != "Y" and verify_withdraw != "y" and verify_withdraw != "N" and verify_withdraw != "n":
+                            verify_withdraw = input(
+                                "\nInvalid choice. Try again. Is this the correct amount, Y or N ? " + currency + " " + str(amt) + ": ")
 
                         if verify_withdraw == "Y" or verify_withdraw == "y":
                             print("Verify withdrawal\n")
@@ -106,8 +110,12 @@ def main_menu():
                                 "\nInvalid choice. Try again, KSH or USD: ")
 
                         print("---------------------------------------")
+                        
                         verify_deposit = input(
                             "Is this the correct amount, Y or N ? " + currency + " " + str(amt) + ": ")
+                        while verify_deposit != "Y" and verify_deposit != "y" and verify_deposit != "N" and verify_deposit != "n":
+                            verify_deposit = input(
+                                "\nInvalid choice. Try again. Is this the correct amount, Y or N ? " + currency + " " + str(amt) + ": ")
 
                         if verify_deposit == "Y" or verify_deposit == "y":
                             # Calling deposit method
@@ -159,6 +167,9 @@ def main_menu():
 
                         verify_changes = input(
                             "\nUsername: " + newname + "\nPin: " + newpin + "\nConfirm changes, Y or N ? : ")
+                        while verify_changes != "Y" and verify_changes != "y" and verify_changes != "N" and verify_changes != "n":
+                            verify_changes = input(
+                                "\nInvalid choice. Try again.\nUsername: " + newname + "\nPin: " + newpin + "\nConfirm changes, Y or N ? : ")
 
                         if verify_changes == "Y" or verify_changes == "y":
                             updated_acc = acc.update_account(
@@ -177,6 +188,10 @@ def main_menu():
                     elif selection == 6:
                         print_receipt = input(
                             "\nWould you like a receipt for this transaction? Y or N: ")
+                        while print_receipt != "Y" and print_receipt != "y" and print_receipt != "N" and print_receipt != "n":
+                            print_receipt = input(
+                                "\nInvalid choice. Try again.\nWould you like a receipt for this transaction? Y or N: ")
+
 
                         if print_receipt == "Y" or print_receipt == "y":
                             session = acc.account_transactions(accountId)
