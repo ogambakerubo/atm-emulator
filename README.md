@@ -9,4 +9,26 @@ There are three accounts.
 {'accountId': 3, 'username': 'tom', 'pin': '2222', 'balance': {'KSH': 140000, 'USD': 2000}}
 ```
 
+## Prerequisite
 
+Make sure you have Python version 3 and above installed on your machine
+
+## Getting Started
+
+Open your terminal, and `cd` into the target folder then
+
+```bash
+git clone https://github.com/ogambakerubo/atm-emulator.git
+```
+
+Then `cd` into the `atm-emulator/ATM-Python` folder
+
+```bash
+cd atm-emulator/ATM-Python
+```
+
+To run the emmulator type in the following code then press enter
+
+```bash
+python3 app.py
+```
