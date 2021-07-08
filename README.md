@@ -32,3 +32,5 @@ To run the emmulator type in the following code then press enter
 ```bash
 python3 app.py
 ```
+
+To exit the application press `CTRL` + `C`
