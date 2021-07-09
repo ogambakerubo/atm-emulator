@@ -44,15 +44,15 @@ def main_menu():
                     # Printing menu
                     print("---------------------------------------")
                     print(
-                        "\nMENU: \n1 - View Balance \n2 - Withdraw \n3 - Deposit \n4 - Transaction History \n5 - Change Account Details \n6 - Exit")
+                        "\nMENU: \n1 - View Balance \n2 - Withdraw \n3 - Deposit \n4 - Transaction History \n5 - Change Account Details \n6 - Transfer money \n7 - Exit")
                     print("---------------------------------------")
 
                     # Reading selection
                     selection = int(input("\nEnter your selection: "))
-                    while not re.match("^[1-6]{1}$", str(selection)):
+                    while not re.match("^[1-7]{1}$", str(selection)):
                         print("---------------------------------------")
                         print(
-                            "\nPlease select a number from the menu: \n1 - View Balance \n2 - Withdraw \n3 - Deposit \n4 - Transaction History \n5 - Change Account Details \n6 - Exit")
+                            "\nPlease select a number from the menu: \n1 - View Balance \n2 - Withdraw \n3 - Deposit \n4 - Transaction History \n5 - Change Account Details \n6 - Transfer money \n7 - Exit")
                         print("---------------------------------------")
                         selection = int(input("\nEnter your selection: "))
 
@@ -78,7 +78,7 @@ def main_menu():
                                 "\nInvalid choice. Try again, KSH or USD: ")
 
                         print("---------------------------------------")
-                        
+
                         verify_withdraw = input(
                             "Is this the correct amount, Y or N ? " + currency + " " + str(amt) + ": ")
                         while verify_withdraw != "Y" and verify_withdraw != "y" and verify_withdraw != "N" and verify_withdraw != "n":
@@ -101,7 +101,7 @@ def main_menu():
                         amt = input("\nEnter amount to deposit: ")
                         while not re.match("^[0-9]*$", amt):
                             print("Error! Only number characters allowed!")
-                            amt = input('\nEnter amount to withdraw: ')
+                            amt = input('\nEnter amount to deposit: ')
                         amt = float(amt)
 
                         currency = input("\nEnter currency, KSH or USD: ")
@@ -110,7 +110,7 @@ def main_menu():
                                 "\nInvalid choice. Try again, KSH or USD: ")
 
                         print("---------------------------------------")
-                        
+
                         verify_deposit = input(
                             "Is this the correct amount, Y or N ? " + currency + " " + str(amt) + ": ")
                         while verify_deposit != "Y" and verify_deposit != "y" and verify_deposit != "N" and verify_deposit != "n":
@@ -184,14 +184,55 @@ def main_menu():
                                 print("Oops! Looks like we ran into an issue.")
                         else:
                             print("Discarding changes ...")
-                    # Exit
+
+                    # Transfer money
                     elif selection == 6:
+                        # Reading amount
+                        amt = input("\nEnter amount to send: ")
+                        while not re.match("^[0-9]*$", amt):
+                            print("Error! Only number characters allowed!")
+                            amt = input('\nEnter amount to send: ')
+                        amt = float(amt)
+
+                        currency = input("\nEnter currency, KSH or USD: ")
+                        while not currency == "KSH" and not currency == "USD":
+                            currency = input(
+                                "\nInvalid choice. Try again, KSH or USD: ")
+
+                        # Reading receiver account
+                        recipient = input("\nEnter receiver account name: ")
+                        recipient = recipient.lower().strip()
+                        while not re.match("^[a-z]{1,15}$", recipient):
+                            print("Error! Only up to 15 characters allowed!")
+                            recipient = input('\nEnter your account pin: ')
+                            recipient = recipient.lower().strip()
+
+                        print("---------------------------------------")
+
+                        verify_transfer = input(
+                            "Is this correct, Y or N ? Send " + currency + " " + str(amt) + " to " + recipient + ": ")
+                        while verify_transfer != "Y" and verify_transfer != "y" and verify_transfer != "N" and verify_deposit != "n":
+                            verify_transfer = input(
+                                "\nInvalid choice. Try again. Is this correct, Y or N ? Send " + currency + " " + str(amt) + " to " + recipient + ": ")
+
+                        if verify_transfer == "Y" or verify_transfer == "y":
+                            # Calling money transfer method
+                            print("Verify transfer\n")
+                            session = acc.transfer_funds(
+                                accountId, recipient, currency, amt)
+                            # Printing updated balance
+                            print("---------------------------------------")
+                            print(session)
+                        else:
+                            break
+
+                    # Exit
+                    elif selection == 7:
                         print_receipt = input(
                             "\nWould you like a receipt for this transaction? Y or N: ")
                         while print_receipt != "Y" and print_receipt != "y" and print_receipt != "N" and print_receipt != "n":
                             print_receipt = input(
                                 "\nInvalid choice. Try again.\nWould you like a receipt for this transaction? Y or N: ")
-
 
                         if print_receipt == "Y" or print_receipt == "y":
                             session = acc.account_transactions(accountId)
