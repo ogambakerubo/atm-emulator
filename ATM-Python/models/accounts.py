@@ -18,6 +18,9 @@ class Account:
 
     account_transactions(accountId):
         Returns a list of all the transactions of a specific account
+
+    transfer_funds(senderId, recipient, currency, amount):
+        Transfers money from one account to another
     '''
 
     # The account ID
@@ -78,10 +81,10 @@ class Account:
         :returns: a list with a specific account
         :rtype: list
         '''
-        account_by_id = [
+        account_by_username = [
             account for account in self.accounts if account['username'] == username]
 
-        return account_by_id
+        return account_by_username
 
     def update_account(self, username, newname, newpin):
         '''
@@ -107,7 +110,7 @@ class Account:
         # check for similar usernames
         for account in self.accounts:
             if(account["username"] == newname):
-                return "Account with username {} already exists".format(newname)
+                return "The username {} is invalid. Try again.".format(newname)
 
         account_to_patch[0]['username'] = newname
         account_to_patch[0]['pin'] = newpin
@@ -180,7 +183,79 @@ class Account:
         :returns: a list of transaction details of a specific account
         :rtype: list
         '''
-        transactions_by_username = [
+        transactions_by_id = [
             transaction for transaction in self.transactions if transaction['accountId'] == accountId]
 
-        return transactions_by_username
+        return transactions_by_id
+
+    def transfer_funds(self, senderId, recipient, currency, amount):
+        '''
+        Transfers money from one account to another
+
+        :param senderId: The account ID of the sender
+        :type senderId: int
+        :param recipient: The account username of the recipient
+        :type recipient: str
+        :param currency: The transaction currency (KSH or USD)
+        :type currency: str
+        :param amount: The transaction amount
+        :type amount: int
+
+        :returns: an error message if transaction amount is greater than the account balance or if the recipient is invalid
+        :rtype: str
+        :OR
+        :returns: a success message if transaction was successful
+        :rtype: str
+        '''
+        sender_account = [
+            account for account in self.accounts if account['accountId'] == senderId]
+
+        if sender_account[0]["balance"][currency] < int(amount):
+            return "Insufficient balance"
+
+        recipient_account = [
+            account for account in self.accounts if account['username'] == recipient]
+        if not len(recipient_account) > 0:
+            return "This transaction is invalid. Please try again."
+
+        for i in range(0, 2):
+
+            if i == 0:
+                account_id = senderId
+                transaction_name = "Sending Money"
+                account_balance = sender_account[0]["balance"][currency] - \
+                    int(amount)
+                sender_account[0]["balance"][currency] = account_balance
+            elif i == 1:
+                account_id = recipient_account[0]["accountId"]
+                transaction_name = "Money Received"
+                account_balance = recipient_account[0]["balance"][currency] + int(
+                    amount)
+                recipient_account[0]["balance"][currency] = account_balance
+
+            # create transaction entries
+            self.__class__.transactionId += 1
+            self.accountId = account_id
+            self.sender_username = sender_account[0]["username"]
+            self.recipient_username = recipient_account[0]["username"]
+            self.transaction_name = transaction_name
+            self.currency = currency
+            self.transaction_amt = int(amount)
+            self.account_balance = account_balance
+
+            # transaction fields
+            self.transaction = {
+                "transactionId": self.__class__.transactionId,
+                "accountId": self.accountId,
+                "sender_username": self.sender_username,
+                "recipient_username": self.recipient_username,
+                "transaction_name": self.transaction_name,
+                "currency": self.currency,
+                "transaction_amt": self.transaction_amt,
+                "account_balance": self.account_balance,
+            }
+
+            # add new transaction to transactions list
+            self.transactions.append(self.transaction)
+
+        return "Transaction was successful.\nNew balance {}".format(sender_account[0]["balance"])
